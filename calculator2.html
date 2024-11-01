@@ -1,0 +1,187 @@
+<html>
+
+<head>
+    <title> Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        .calculator {
+            background-color: rgb(0, 153, 255);
+            padding: 50px;
+            border-radius: 50px;
+        }
+
+        input {
+            height: 75px;
+            width: 500px;
+            font-size: 48px;
+            padding-left: 28px;
+            padding-right: 28px;
+            font-family: "Poppins", sans-serif;
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        .button {
+            height: 50px;
+            width: 122px;
+            margin-top: 8px;
+            border-radius: 10px;
+            font-size: 28px;
+            font-family: "Poppins", sans-serif;
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        .orange {
+            background-color: orange;
+        }
+
+        .blue {
+            background-color: blue;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .left {
+            margin-left: 4px;
+        }
+
+        .sdsz {
+            display: flex;
+            align-items: center;
+        }
+
+        .flex {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fsfd {
+            display: flex;
+            align-items: center;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="calculator">
+        <input type="text" id="answer">
+        <br>
+        <div class="fsfd">
+
+            <button class="button orange">(</button>
+            <button class="button orange left">)</button>
+            <button class="button orange left">%</button>
+            <div class="button orange flex left" onclick="Clear()">CL</div>
+            <button class="button orange left">^</button>
+        </div>
+        <button class="button">1</button>
+        <button class="button">2</button>
+        <button class="button">3</button>
+        <button class="button orange">+</button>
+        <button class="button orange"> &#8730;</button>
+        <br>
+        <button class="button">4</button>
+        <button class="button">5</button>
+        <button class="button">6</button>
+        <button class="button orange">-</button>
+        <br>
+        <button class="button">7</button>
+        <button class="button">8</button>
+        <button class="button">9</button>
+        <button class="button orange">/</button>
+        <br>
+        <div class="sdsz ">
+            <button class="button">*</button>
+            <button class="button left">0</button>
+            <div class="button blue left" id="Btn" onclick="calculate()">=</div>
+            <button class="button orange left">.</button>
+        </div>
+    </div>
+    <script>
+        let buttons = document.querySelectorAll("button");
+        let input = document.getElementById("answer");
+        input.addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                document.getElementById("Btn").click();
+            }
+        });
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener("click", () => {
+                console.log(buttons[i].textContent)
+                const ButtonText = buttons[i].textContent
+                answer.value += ButtonText;
+
+            });
+
+
+        }
+
+
+   // Event listener for preventing alphabet input
+input.addEventListener("keypress", function(event) {
+    const key = event.key.toUpperCase();
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    if (alphabet.includes(key)) {
+        event.preventDefault();
+        console.log('Press number');
+    }
+});
+function calculate() {
+    const expression = document.getElementById("answer").value;
+
+    if (!expression) {
+        // ... (error handling as before)
+    }
+
+    fetch('http://127.0.0.1:5000/calculate', { // Ensure the correct endpoint
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ expression: expression })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok: ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Handle the response data here
+        document.getElementById('answer').value = data.result;
+        // ... (other UI updates)
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('answer').value = "An error occurred. Please try again.";
+        // ... (error display)
+    });
+}
+        function Clear() {
+            document.getElementById("answer").value = "";
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.1.0/math.min.js"></script>
+</body>
+
+</html>
